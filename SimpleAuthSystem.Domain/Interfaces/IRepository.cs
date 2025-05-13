@@ -10,6 +10,5 @@ namespace SimpleAuthSystem.Domain.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(object Id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-        Task<int> SaveChnagesAsync();
     }
 }

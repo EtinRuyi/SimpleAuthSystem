@@ -7,7 +7,7 @@ namespace SimpleAuthSystem.Infrastructure.Repositories
 {
     public class UserRepository : Repository<AppUser>, IUserRepository
     {
-        private readonly AuthSystemContext _context;
+        protected readonly AuthSystemContext _context;
 
         public UserRepository(AuthSystemContext context) : base(context)
         {

@@ -11,18 +11,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{AF4C9F3A-3FCA-4167-B058-186945248EA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthSystem.Domain", "SimpleAuthSystem.Domain\SimpleAuthSystem.Domain.csproj", "{53A6EE93-E118-42EA-A388-19F960215559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthSystem.Domain", "SimpleAuthSystem.Domain\SimpleAuthSystem.Domain.csproj", "{53A6EE93-E118-42EA-A388-19F960215559}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B32DDFAD-AC09-47D7-9462-1E535D01E04E}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthSystem.Application", "SimpleAuthSystem.Application\SimpleAuthSystem.Application.csproj", "{2ED5B150-6F98-450A-80B7-22F1EB1BBBC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthSystem.Application", "SimpleAuthSystem.Application\SimpleAuthSystem.Application.csproj", "{2ED5B150-6F98-450A-80B7-22F1EB1BBBC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthSystem.Infrastructure", "SimpleAuthSystem.Infrastructure\SimpleAuthSystem.Infrastructure.csproj", "{1A5DAD7F-1C27-4C0D-91EB-FE1BF49A6D75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthSystem.Infrastructure", "SimpleAuthSystem.Infrastructure\SimpleAuthSystem.Infrastructure.csproj", "{1A5DAD7F-1C27-4C0D-91EB-FE1BF49A6D75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleAuthSystem.API", "SimpleAuthSystem.API\SimpleAuthSystem.API.csproj", "{7D473633-B621-470B-B45C-811DC558158F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAuthSystem.API", "SimpleAuthSystem.API\SimpleAuthSystem.API.csproj", "{7D473633-B621-470B-B45C-811DC558158F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

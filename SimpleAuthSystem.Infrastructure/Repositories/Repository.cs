@@ -8,8 +8,8 @@ namespace SimpleAuthSystem.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly AuthSystemContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly AuthSystemContext _context;
+        protected readonly DbSet<T> _dbSet;
 
         public Repository(AuthSystemContext context)
         {
@@ -54,11 +54,6 @@ namespace SimpleAuthSystem.Infrastructure.Repositories
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().Where(predicate).ToListAsync();
-        }
-
-        public async Task<int> SaveChnagesAsync()
-        {
-            return await _context.SaveChangesAsync();
         }
     }
 }

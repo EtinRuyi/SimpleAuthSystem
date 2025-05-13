@@ -4,6 +4,7 @@ using SimpleAuthSystem.Application.ApiResponse;
 using SimpleAuthSystem.Application.DTOs;
 using SimpleAuthSystem.Application.DTOs.RequestDTOs;
 using SimpleAuthSystem.Application.DTOs.ResponseDTOs;
+using SimpleAuthSystem.Application.Exceptions;
 using SimpleAuthSystem.Application.Services.Interfaces;
 using SimpleAuthSystem.Domain.Entities;
 using SimpleAuthSystem.Domain.Interfaces;
@@ -12,17 +13,17 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly TokenService _tokenService;
         private readonly PasswordHarshService _passwordService;
         private readonly ILogger<AuthService> _logger;
         
 
-        public AuthService(IUserRepository userRepository, IMapper mapper, 
+        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, 
             TokenService tokenService, PasswordHarshService passwordService, ILogger<AuthService> logger)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _tokenService = tokenService;
             _passwordService = passwordService;
@@ -33,40 +34,35 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
         {
             try
             {
-                // Check if email is already taken
-                if (!await _userRepository.IsEmailUniqueAsync(registerDto.Email))
+                _logger.LogInformation("Registering user with username: {Username}", registerDto.Username);
+                var uniqueEmail = await _unitOfWork.Users.IsEmailUniqueAsync(registerDto.Email);
+                if (!uniqueEmail)
                 {
                     return Result<AuthResponseDto>.Failure("Email is already taken");
                 }
 
-                // Check if username is already taken
-                if (!await _userRepository.IsUsernameUniqueAsync(registerDto.Username))
+                var uniqueUsername = await _unitOfWork.Users.IsUsernameUniqueAsync(registerDto.Username);
+                if (!uniqueUsername)
                 {
                     return Result<AuthResponseDto>.Failure("Username is already taken");
                 }
 
-                // Create new user
                 var user = _mapper.Map<AppUser>(registerDto);
-                user.Id = Guid.NewGuid();
+                user.Id = Guid.NewGuid().ToString();
                 user.PasswordHash = _passwordService.HashPassword(registerDto.Password);
                 user.CreatedAt = DateTime.UtcNow;
 
-                await _userRepository.AddAsync (user);
-
-                // Generate JWT token
-                var token = _tokenService.GenerateJwtToken(user);
+                await _unitOfWork.Users.AddAsync(user);
+                await _unitOfWork.SaveChangesAsync();
                 var userDto = _mapper.Map<UserDTO>(user);
 
-                return Result<AuthResponseDto>.Success(new AuthResponseDto
-                {
-                    Token = token,
-                    User = userDto
-                }, "User registered successfully");
+                _logger.LogInformation("User registered successfully: {Username}", registerDto.Username);
+                return Result<AuthResponseDto>.Success(new AuthResponseDto {User = userDto}, "User registered successfully");
             }
             catch (Exception ex)
             {
-                // Log exception
-                return Result<AuthResponseDto>.Failure("Registration failed: " + ex.Message);
+                _logger.LogError(ex, "Error occurred while registering user: {Username}", registerDto.Username);
+                throw new BadRequestException("Registration failed: " + ex.Message);
             }
         }
 
@@ -74,28 +70,26 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
         {
             try
             {
-                // Find user by username
-                var user = await _userRepository.GetByUsernameAsync(loginDto.Username);
+                var user = await _unitOfWork.Users.GetByEmailAsync(loginDto.Email);
                 if (user == null)
                 {
-                    return Result<AuthResponseDto>.Failure("Invalid username or password");
+                    _logger.LogWarning("Login failed: Invalid email {Email}", loginDto.Email);
+                    return Result<AuthResponseDto>.Failure("Invalid email or password");
                 }
 
-                // Verify password
                 if (!_passwordService.VerifyPassword(loginDto.Password, user.PasswordHash))
                 {
+                    _logger.LogWarning("Login failed: Invalid password for email {Email}", loginDto.Email);
                     return Result<AuthResponseDto>.Failure("Invalid username or password");
                 }
 
-                // Update last login time
                 user.LastLogin = DateTime.UtcNow;
-                // UpdateAsync now automatically saves changes
-                await _userRepository.UpdateAsync(user);
-
-                // Generate JWT token
+                await _unitOfWork.Users.UpdateAsync(user);
+                await _unitOfWork.SaveChangesAsync();
                 var token = _tokenService.GenerateJwtToken(user);
-                var userDto = _mapper.Map<AppUserDto>(user);
+                var userDto = _mapper.Map<UserDTO>(user);
 
+                _logger.LogInformation("User logged in successfully: {Email}", loginDto.Email);
                 return Result<AuthResponseDto>.Success(new AuthResponseDto
                 {
                     Token = token,
@@ -104,8 +98,8 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
             }
             catch (Exception ex)
             {
-                // Log exception
-                return Result<AuthResponseDto>.Failure("Login failed: " + ex.Message);
+                _logger.LogError(ex, "Error occurred while logging in user: {Email}", loginDto.Email);
+                throw new UnauthorizedException("Login failed: " + ex.Message);
             }
         }
 
@@ -125,6 +119,7 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occurred while validating token: {Message}", ex.Message);
                 return Result<bool>.Failure("Token validation failed: " + ex.Message);
             }
         }

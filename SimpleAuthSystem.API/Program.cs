@@ -1,36 +1,57 @@
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Serilog;
+using SimpleAuthSystem.API.Extension;
+using SimpleAuthSystem.API.MiddleWares;
+using SimpleAuthSystem.Application.Extension;
+using SimpleAuthSystem.Infrastructure.Extension;
 
-namespace SimpleAuthSystem.API
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
+});
 
-            // Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
+builder.Services.ConfigureVersioning();
+builder.Services.ConfigureJwtAccess(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+builder.Services.AddApiVersioning(x =>
+{
+    x.DefaultApiVersion = new ApiVersion(1, 0);
+    x.AssumeDefaultVersionWhenUnspecified = true;
+    x.ReportApiVersions = true;
+});
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
+builder.Services.AddControllers().AddNewtonsoftJson(x =>
+{
+    x.SerializerSettings.Converters.Add(new StringEnumConverter());
+    x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.Run();
+
+
