@@ -76,7 +76,7 @@ namespace SimpleAuthSystem.API.Extension
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config["JwtConfig:Secret"])),
                     ValidIssuer = config["JwtConfig:Issuer"],
                     ValidAudience = config["JwtConfig:Audience"],
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.FromSeconds(30)
                 };
             });
         }

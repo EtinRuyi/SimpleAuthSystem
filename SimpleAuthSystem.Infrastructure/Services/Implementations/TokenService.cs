@@ -21,6 +21,7 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+            var now = DateTime.UtcNow;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -30,7 +31,9 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.ExpirationMinutes),
+                NotBefore = now.AddSeconds(-1),
+                Expires = now.AddMinutes(_jwtConfig.ExpirationMinutes),
+                IssuedAt = now,
                 Issuer = _jwtConfig.Issuer,
                 Audience = _jwtConfig.Audience,
                 SigningCredentials = new SigningCredentials(
