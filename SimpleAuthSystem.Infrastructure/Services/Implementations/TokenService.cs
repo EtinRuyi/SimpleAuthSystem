@@ -21,7 +21,6 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
-            var now = DateTime.UtcNow;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -31,9 +30,7 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email)
                 }),
-                NotBefore = now.AddSeconds(-1),
-                Expires = now.AddMinutes(_jwtConfig.ExpirationMinutes),
-                IssuedAt = now,
+                Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.ExpirationMinutes),
                 Issuer = _jwtConfig.Issuer,
                 Audience = _jwtConfig.Audience,
                 SigningCredentials = new SigningCredentials(
@@ -64,7 +61,6 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
                     ValidateAudience = true,
                     ValidAudience = _jwtConfig.Audience,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
                 return true;

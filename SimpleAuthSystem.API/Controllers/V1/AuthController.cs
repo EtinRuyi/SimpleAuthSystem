@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleAuthSystem.Application.ApiResponse;
+using SimpleAuthSystem.Application.DTOs;
 using SimpleAuthSystem.Application.DTOs.RequestDTOs;
 using SimpleAuthSystem.Application.DTOs.ResponseDTOs;
 using SimpleAuthSystem.Application.Services.Interfaces;
+using SimpleAuthSystem.Infrastructure.Services.Implementations;
+using System.Security.Claims;
 
 namespace SimpleAuthSystem.API.Controllers.V1
 {
@@ -11,12 +14,15 @@ namespace SimpleAuthSystem.API.Controllers.V1
     {
         private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
+        private readonly IUserService _userService;
 
 
-        public AuthController(IAuthService authService, ILogger<AuthController> logger)
+        public AuthController(IAuthService authService, 
+            ILogger<AuthController> logger, IUserService userService)
         {
             _authService = authService;
             _logger = logger;
+            _userService = userService;
         }
 
         [HttpPost("register")]
@@ -47,6 +53,36 @@ namespace SimpleAuthSystem.API.Controllers.V1
         {
             _logger.LogInformation("Token validation successful for user: {User}", User.Identity.Name);
             return Ok(Result<bool>.Success(true, "Token is valid"));
+        }
+
+        [HttpGet("currentuser")]
+        [Authorize]
+        public async Task<ActionResult<UserDTO>> GetCurrentUser()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    _logger.LogWarning("No user ID found in token");
+                    return BadRequest(Result<UserDTO>.Failure("Invalid token, No user ID found in token"));
+                }
+
+                var result = await _userService.GetUserByIdAsync(userId);
+                if (!result.IsSuccess)
+                {
+                    _logger.LogWarning("User not found for ID: {UserId}", userId);
+                    return NotFound(result);
+                }
+
+                _logger.LogInformation("Successfully retrieved current user: {UserId}", userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving current user");
+                return BadRequest(Result<UserDTO>.Failure("Error retrieving current user: " + ex.Message));
+            }
         }
     }
 }

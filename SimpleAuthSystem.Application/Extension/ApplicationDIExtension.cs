@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleAuthSystem.Application.DTOs;
+using SimpleAuthSystem.Application.Validators;
 
 namespace SimpleAuthSystem.Application.Extension
 {
@@ -10,6 +12,8 @@ namespace SimpleAuthSystem.Application.Extension
         {
             services.AddAutoMapper(typeof(ApplicationDIExtension).Assembly);
             services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
+            services.AddValidatorsFromAssemblyContaining<LoginValidator>();
+            services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
             return services;
         }
