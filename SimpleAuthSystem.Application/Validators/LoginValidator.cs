@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using SimpleAuthSystem.Application.DTOs.RequestDTOs;
-
-namespace SimpleAuthSystem.Application.Validators
+﻿namespace SimpleAuthSystem.Application.Validators
 {
     public class LoginValidator : AbstractValidator<LoginDto>
     {

@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SimpleAuthSystem.Domain.Entities;
-using SimpleAuthSystem.Domain.Interfaces;
-using SimpleAuthSystem.Infrastructure.AppContext;
-
-namespace SimpleAuthSystem.Infrastructure.Repositories
+﻿namespace SimpleAuthSystem.Infrastructure.Repositories
 {
     public class UserRepository : Repository<AppUser>, IUserRepository
     {

@@ -1,13 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleAuthSystem.Application.Services.Interfaces;
-using SimpleAuthSystem.Domain.Interfaces;
-using SimpleAuthSystem.Infrastructure.AppContext;
-using SimpleAuthSystem.Infrastructure.Repositories;
-using SimpleAuthSystem.Infrastructure.Services.Implementations;
-
-namespace SimpleAuthSystem.Infrastructure.Extension
+﻿namespace SimpleAuthSystem.Infrastructure.Extension
 {
     public static class DIServiceExtension
     {

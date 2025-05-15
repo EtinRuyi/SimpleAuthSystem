@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace SimpleAuthSystem.Application.Exceptions
+﻿namespace SimpleAuthSystem.Application.Exceptions
 {
     public abstract class BaseException : Exception
     {

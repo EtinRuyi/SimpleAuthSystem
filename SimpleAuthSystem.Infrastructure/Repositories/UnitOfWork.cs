@@ -1,7 +1,4 @@
-﻿using SimpleAuthSystem.Domain.Interfaces;
-using SimpleAuthSystem.Infrastructure.AppContext;
-
-namespace SimpleAuthSystem.Infrastructure.Repositories
+﻿namespace SimpleAuthSystem.Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

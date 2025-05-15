@@ -1,8 +1,4 @@
-﻿using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.DTOs.RequestDTOs;
-using SimpleAuthSystem.Application.DTOs.ResponseDTOs;
-
-namespace SimpleAuthSystem.Application.Services.Interfaces
+﻿namespace SimpleAuthSystem.Application.Services.Interfaces
 {
     public interface IAuthService
     {

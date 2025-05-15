@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Application.DTOs.RequestDTOs;
-using SimpleAuthSystem.Domain.Entities;
-
-namespace SimpleAuthSystem.Application.Mappers
+﻿namespace SimpleAuthSystem.Application.Mappers
 {
     public class MappingProfile : Profile
     {

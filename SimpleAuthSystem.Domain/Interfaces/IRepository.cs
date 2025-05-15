@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace SimpleAuthSystem.Domain.Interfaces
+﻿namespace SimpleAuthSystem.Domain.Interfaces
 {
     public interface IRepository<T> where T : class
     {

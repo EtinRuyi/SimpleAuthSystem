@@ -1,7 +1,4 @@
-﻿using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.DTOs;
-
-namespace SimpleAuthSystem.Application.Services.Interfaces
+﻿namespace SimpleAuthSystem.Application.Services.Interfaces
 {
     public interface IUserService
     {

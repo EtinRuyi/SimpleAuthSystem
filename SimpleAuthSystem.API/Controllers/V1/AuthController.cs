@@ -1,14 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Application.DTOs.RequestDTOs;
-using SimpleAuthSystem.Application.DTOs.ResponseDTOs;
-using SimpleAuthSystem.Application.Services.Interfaces;
-using SimpleAuthSystem.Infrastructure.Services.Implementations;
-using System.Security.Claims;
-
-namespace SimpleAuthSystem.API.Controllers.V1
+﻿namespace SimpleAuthSystem.API.Controllers.V1
 {
     public class AuthController : BaseController
     {

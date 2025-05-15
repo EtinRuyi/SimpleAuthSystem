@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.Exceptions;
-using System.Net;
-
-namespace SimpleAuthSystem.API.MiddleWares
+﻿namespace SimpleAuthSystem.API.MiddleWares
 {
     public class ExceptionMiddleware
     {

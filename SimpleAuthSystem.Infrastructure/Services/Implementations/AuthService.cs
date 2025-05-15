@@ -1,15 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
-using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Application.DTOs.RequestDTOs;
-using SimpleAuthSystem.Application.DTOs.ResponseDTOs;
-using SimpleAuthSystem.Application.Exceptions;
-using SimpleAuthSystem.Application.Services.Interfaces;
-using SimpleAuthSystem.Domain.Entities;
-using SimpleAuthSystem.Domain.Interfaces;
-
-namespace SimpleAuthSystem.Infrastructure.Services.Implementations
+﻿namespace SimpleAuthSystem.Infrastructure.Services.Implementations
 {
     public class AuthService : IAuthService
     {
@@ -51,13 +40,16 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
                 user.Id = Guid.NewGuid().ToString();
                 user.PasswordHash = _passwordService.HashPassword(registerDto.Password);
                 user.CreatedAt = DateTime.UtcNow;
+                user.LastLogin = DateTime.UtcNow;
 
                 await _unitOfWork.Users.AddAsync(user);
                 await _unitOfWork.SaveChangesAsync();
+                var token = _tokenService.GenerateJwtToken(user);
                 var userDto = _mapper.Map<UserDTO>(user);
 
+
                 _logger.LogInformation("User registered successfully: {Username}", registerDto.Username);
-                return Result<AuthResponseDto>.Success(new AuthResponseDto {User = userDto}, "User registered successfully");
+                return Result<AuthResponseDto>.Success(new AuthResponseDto {User = userDto, Token = token}, "User registered successfully");
             }
             catch (Exception ex)
             {

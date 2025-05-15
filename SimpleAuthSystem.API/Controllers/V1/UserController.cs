@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SimpleAuthSystem.Application.Services.Interfaces;
-
-namespace SimpleAuthSystem.API.Controllers.V1
+﻿namespace SimpleAuthSystem.API.Controllers.V1
 {
     public class UserController : BaseController
     {
@@ -24,9 +20,9 @@ namespace SimpleAuthSystem.API.Controllers.V1
 
         [HttpGet("allusers")]
         [Authorize]
-        public async Task<IActionResult> GetAllUsers([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _userService.GetAllUserAsync(page, pageSize);
+            var result = await _userService.GetAllUserAsync(pageSize, page);
             return Ok(result);
         }
 

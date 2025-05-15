@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
-
-namespace SimpleAuthSystem.API.Extension
+﻿namespace SimpleAuthSystem.API.Extension
 {
     public static class AppConfigurations
     {

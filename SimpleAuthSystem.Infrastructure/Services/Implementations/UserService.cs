@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
-using SimpleAuthSystem.Application.ApiResponse;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Application.Exceptions;
-using SimpleAuthSystem.Application.Services.Interfaces;
-using SimpleAuthSystem.Domain.Interfaces;
+﻿using SimpleAuthSystem.Application.DTOs;
 
 namespace SimpleAuthSystem.Infrastructure.Services.Implementations
 {
@@ -73,15 +67,18 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
             {
                 _logger.LogInformation("Getting all users with pagination - Page: {Page}, Size: {Size}", currentPage, pageSize);
                 var users = await _unitOfWork.Users.GetAllAsync();
+
+                int effectivePageSize = pageSize <= 0 ? 50 : Math.Min(pageSize, 50);
+                int effectivePage = currentPage <= 0 ? 1 : currentPage;
+
                 var totalCount = users.Count();
-                var pagedUsers = users
-                    .Skip((currentPage - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                var userDtos = _mapper.Map<List<UserDTO>>(pagedUsers);
-                var pagedList = new PageList<UserDTO>(userDtos, totalCount, pageSize, currentPage);
-
+                var pagedList = PageList<UserDTO>.Create(
+                    users,
+                    totalCount,
+                    effectivePageSize,
+                    effectivePage,
+                    items => _mapper.Map<List<UserDTO>>(items)
+                );
                 return Result<PageList<UserDTO>>.Success(pagedList, "Users retrieved successfully");
             }
             catch (Exception ex)

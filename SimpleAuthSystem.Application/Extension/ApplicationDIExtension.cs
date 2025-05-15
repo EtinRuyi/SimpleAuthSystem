@@ -1,10 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Application.Validators;
-
-namespace SimpleAuthSystem.Application.Extension
+﻿namespace SimpleAuthSystem.Application.Extension
 {
     public static class ApplicationDIExtension
     {

@@ -1,20 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using SimpleAuthSystem.Application.DTOs;
-using SimpleAuthSystem.Domain.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace SimpleAuthSystem.Infrastructure.Services.Implementations
+﻿namespace SimpleAuthSystem.Infrastructure.Services.Implementations
 {
     public class TokenService
     {
         private readonly JwtConfig _jwtConfig;
+        private readonly IConfiguration _configuration;
 
-        public TokenService(IOptions<JwtConfig> jwtConfig)
+        public TokenService(IOptions<JwtConfig> jwtConfig, IConfiguration configuration)
         {
             _jwtConfig = jwtConfig.Value;
+            _configuration = configuration;
         }
 
         public string GenerateJwtToken(AppUser user)
@@ -30,7 +24,7 @@ namespace SimpleAuthSystem.Infrastructure.Services.Implementations
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.ExpirationMinutes),
+                Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _jwtConfig.Issuer,
                 Audience = _jwtConfig.Audience,
                 SigningCredentials = new SigningCredentials(

@@ -1,6 +1,4 @@
-﻿using SimpleAuthSystem.Domain.Common;
-
-namespace SimpleAuthSystem.Domain.Entities
+﻿namespace SimpleAuthSystem.Domain.Entities
 {
     public class AppUser : BaseEntity
     {

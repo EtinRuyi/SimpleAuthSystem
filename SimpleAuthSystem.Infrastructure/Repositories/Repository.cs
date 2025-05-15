@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SimpleAuthSystem.Application.Exceptions;
-using SimpleAuthSystem.Domain.Interfaces;
-using SimpleAuthSystem.Infrastructure.AppContext;
-using System.Linq.Expressions;
-
-namespace SimpleAuthSystem.Infrastructure.Repositories
+﻿namespace SimpleAuthSystem.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

@@ -1,6 +1,4 @@
-﻿using SimpleAuthSystem.Domain.Entities;
-
-namespace SimpleAuthSystem.Domain.Interfaces
+﻿namespace SimpleAuthSystem.Domain.Interfaces
 {
     public interface IUserRepository : IRepository<AppUser>
     {

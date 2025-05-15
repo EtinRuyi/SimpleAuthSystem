@@ -1,13 +1,3 @@
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Serilog;
-using SimpleAuthSystem.API.Extension;
-using SimpleAuthSystem.API.MiddleWares;
-using SimpleAuthSystem.Application.Extension;
-using SimpleAuthSystem.Infrastructure.Extension;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, services, configuration) =>
